@@ -1,0 +1,32 @@
+### Data & Databases ###
+dataset/
+*.db
+*.sqlite
+
+### Python & Environment ###
+__pycache__/
+.pytest_cashe/
+
+# Virtual environment
+venv/
+.venv/
+
+### Airflow & Logging ###
+# Local execution artifacts
+logs/
+airflow/logs/
+airflow/config/
+airflow/plugins/
+airflow/outputs
+airflow-webserver.pid
+standalone_admin_password.txt
+tmp/
+
+### Jupyter ###
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# File types
+*.log
+*.env
+.DS_Store%  
