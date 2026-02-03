@@ -39,10 +39,11 @@ def preprocess_data(
     # columns (`DAYS_EMPLOYED` column).
     working_train_df["DAYS_EMPLOYED"].replace({365243: np.nan}, inplace=True)
     working_val_df["DAYS_EMPLOYED"].replace({365243: np.nan}, inplace=True)
-    working_test_df["DAYS_EMPLOYED"].replace({365243: np.nan}, inplace=True)
-
-
-    # 2. TODO Encode string categorical features (dytpe `object`):
+    working_test_df["DAYS_EMPLOYED"].replace({365243: np.nan}, inplace=True)  
+    
+    
+    # 2. DONE
+    # Encode string categorical features (dytpe `object`):
     #     - If the feature has 2 categories encode using binary encoding,
     #       please use `sklearn.preprocessing.OrdinalEncoder()`. Only 4 columns
     #       from the dataset should have 2 categories.
@@ -56,12 +57,10 @@ def preprocess_data(
     #     working_train_df DataFrame to fit the OrdinalEncoder and
     #     OneHotEncoder classes, then use the fitted models to transform all the
     #     datasets.
-    
     binary_cat_features = working_train_df.columns[
         (working_train_df.dtypes == "object") & (working_train_df.nunique() == 2)
         #(working_train_df.dtypes == "object") & (working_train_df.nunique() <= 2)
     ].tolist()
-
 
     multicat_features = working_train_df.columns[
         (working_train_df.dtypes == "object") & (working_train_df.nunique() > 2)
@@ -71,6 +70,25 @@ def preprocess_data(
         (working_train_df.dtypes != "object")
     ].tolist()
 
+
+    # 3. DONE 
+    # Impute values for all columns with missing data or, just all the columns.
+    # Use median as imputing value. Please use sklearn.impute.SimpleImputer().
+    # Again, take into account that:
+    #   - You must apply this to the 3 DataFrames (working_train_df, working_val_df,
+    #     working_test_df).
+    #   - In order to prevent overfitting and avoid Data Leakage you must use only
+    #     working_train_df DataFrame to fit the SimpleImputer and then use the fitted
+    #     model to transform all the datasets.
+    # 4. DONE Feature scaling with Min-Max scaler. Apply this to all the columns.
+    # Please use sklearn.preprocessing.MinMaxScaler().
+    # Again, take into account that:
+    #   - You must apply this to the 3 DataFrames (working_train_df, working_val_df,
+    #     working_test_df).
+    #   - In order to prevent overfitting and avoid Data Leakage you must use only
+    #     working_train_df DataFrame to fit the MinMaxScaler and then use the fitted
+    #     model to transform all the datasets.
+    
     binary_transformer = Pipeline(steps=[
         ("ordinal", OrdinalEncoder(
             handle_unknown="use_encoded_value",
@@ -100,36 +118,12 @@ def preprocess_data(
             ("multicat", multicat_transformer, multicat_features),
             ("numerical", numerical_transformer, numerical_features)
         ],
-        remainder="drop"  # Drop any columns not specified
+        remainder="drop"
     )
 
-    # 3. TODO Impute values for all columns with missing data or, just all the columns.
-    # Use median as imputing value. Please use sklearn.impute.SimpleImputer().
-    # Again, take into account that:
-    #   - You must apply this to the 3 DataFrames (working_train_df, working_val_df,
-    #     working_test_df).
-    #   - In order to prevent overfitting and avoid Data Leakage you must use only
-    #     working_train_df DataFrame to fit the SimpleImputer and then use the fitted
-    #     model to transform all the datasets.
     preprocessor.fit(working_train_df)
-    # Transform all datasets
     train = preprocessor.transform(working_train_df)
     val = preprocessor.transform(working_val_df)
     test = preprocessor.transform(working_test_df)
-    print("Output train data shape: ", train.shape)
-    print("Output val data shape: ", val.shape)
-    print("Output test data shape: ", test.shape, "\n")
+    
     return train, val, test
-
-
-    # 4. TODO Feature scaling with Min-Max scaler. Apply this to all the columns.
-    # Please use sklearn.preprocessing.MinMaxScaler().
-    # Again, take into account that:
-    #   - You must apply this to the 3 DataFrames (working_train_df, working_val_df,
-    #     working_test_df).
-    #   - In order to prevent overfitting and avoid Data Leakage you must use only
-    #     working_train_df DataFrame to fit the MinMaxScaler and then use the fitted
-    #     model to transform all the datasets.
-
-
-    return None

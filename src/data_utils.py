@@ -22,17 +22,14 @@ def get_datasets() -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
         columns_description : pd.DataFrame
             Extra dataframe with detailed description about dataset features
     """
-    # Download HomeCredit_columns_description.csv
     if not os.path.exists(config.DATASET_DESCRIPTION):
         gdown.download(
             config.DATASET_DESCRIPTION_URL, config.DATASET_DESCRIPTION, quiet=False
         )
 
-    # Download application_test_aai.csv
     if not os.path.exists(config.DATASET_TEST):
         gdown.download(config.DATASET_TEST_URL, config.DATASET_TEST, quiet=False)
 
-    # Download application_train_aai.csv
     if not os.path.exists(config.DATASET_TRAIN):
         gdown.download(config.DATASET_TRAIN_URL, config.DATASET_TRAIN, quiet=False)
 
@@ -69,7 +66,7 @@ def get_feature_target(
     """
     X_train, y_train, X_test, y_test = None, None, None, None
 
-    # TODO
+    # DONE
     # Assign to X_train all the columns from app_train except "TARGET"
     # Assign to y_train the "TARGET" column
     # Assign to X_test all the columns from app_test except "TARGET"
@@ -77,10 +74,12 @@ def get_feature_target(
 
     target = "TARGET"
     features = list(set(app_train.columns) - set([target]))
+    
     X_train = app_train[features]
     y_train = app_train[target]
     X_test = app_test[features]
     y_test = app_test[target]
+    
     return X_train, y_train, X_test, y_test
 
 
@@ -106,9 +105,8 @@ def get_train_val_sets(
         y_val : pd.Series
             Validation target
     """
-    X_train, X_val, y_train, y_val = None, None, None, None
 
-    # TODO
+    # DONE
     # Use the `sklearn.model_selection.train_test_split` function with
     # `X_train`, `y_train` datasets.
     # Assign only 20% of the dataset for testing (see `test_size` parameter in
@@ -116,7 +114,10 @@ def get_train_val_sets(
     # Assign a seed so we get reproducible output across multiple function
     # calls (see `random_state` parameter in `train_test_split`).
     # Shuffle the data (see `shuffle` parameter in `train_test_split`).
+    X_val, y_val = None, None
+
     X_train, X_val, y_train, y_val = train_test_split(
         X_train, y_train, test_size=0.2, random_state=2023, shuffle=True
     )
+
     return X_train, X_val, y_train, y_val
