@@ -75,7 +75,12 @@ def get_feature_target(
     # Assign to X_test all the columns from app_test except "TARGET"
     # Assign to y_test the "TARGET" column
 
-
+    target = "TARGET"
+    features = list(set(app_train.columns) - set([target]))
+    X_train = app_train[features]
+    y_train = app_train[target]
+    X_test = app_test[features]
+    y_test = app_test[target]
     return X_train, y_train, X_test, y_test
 
 
@@ -111,6 +116,7 @@ def get_train_val_sets(
     # Assign a seed so we get reproducible output across multiple function
     # calls (see `random_state` parameter in `train_test_split`).
     # Shuffle the data (see `shuffle` parameter in `train_test_split`).
-
-
+    X_train, X_val, y_train, y_val = train_test_split(
+        X_train, y_train, test_size=0.2, random_state=2023, shuffle=True
+    )
     return X_train, X_val, y_train, y_val
