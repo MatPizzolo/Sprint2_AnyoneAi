@@ -1,5 +1,6 @@
 ### Data & Databases ###
-dataset/
+dataset/*
+!/dataset/application_test_aai.csv
 *.db
 *.sqlite
 
